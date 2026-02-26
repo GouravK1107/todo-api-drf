@@ -1,0 +1,261 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dashboard — Tasko</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+<link rel="icon" type="image/png" href="/static/images/icon.png">
+</head>
+<body>
+
+<nav class="navbar">
+  <button class="hamburger" id="hbg" aria-label="Toggle sidebar">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+  <a href="index.html" class="nav-brand">
+    <div class="brand-gem">T</div>
+    <span class="brand-text">Tasko</span>
+  </a>
+  <div class="nav-middle">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="search" id="searchInp" placeholder="Search tasks…" aria-label="Search"/>
+    </div>
+  </div>
+  <div class="nav-right">
+    <button class="icon-btn" id="themeBtn" aria-label="Toggle dark mode">
+      <svg id="themeIco" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+    </button>
+    <button class="icon-btn" id="notifBell" aria-label="Notifications">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span class="notif-pip" id="notifPip"></span>
+    </button>
+    <button class="user-pill">
+      <div class="user-ava">AR</div>
+      <span>Ada Rao</span>
+    </button>
+    <button class="logout-link" id="logoutBtn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+    </button>
+  </div>
+</nav>
+
+<!-- Sidebar overlay -->
+<div class="sb-overlay" id="sbOv"></div>
+
+<!-- ═══ NOTIFICATION PANEL (with empty state) ═══ -->
+<div class="notif-overlay" id="notifPanel">
+  <div class="notif-header">
+    <h3>Notifications</h3>
+    <button class="notif-close" id="closeNotif" aria-label="Close notifications">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div class="notif-list" id="notifList"></div>
+  <div class="notif-footer">
+    <button id="markAllRead">Mark all read</button>
+    <button id="clearNotif">Clear all</button>
+  </div>
+</div>
+
+<!-- ═══ SHELL ═══ -->
+<div class="app-shell">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Progress card -->
+    <div class="sb-card">
+      <div class="sc-eyebrow">Weekly Progress</div>
+      <div class="sc-body">
+        <div>
+          <div class="sc-pct" id="progPct">0%</div>
+          <div class="sc-sub" id="progSub">0 of 0 done</div>
+        </div>
+        <svg width="52" height="52" viewBox="0 0 52 52" class="ring-svg">
+          <circle class="ring-bg" cx="26" cy="26" r="22"/>
+          <circle class="ring-fill" id="ringFill" cx="26" cy="26" r="22"
+            stroke-dasharray="138.2" stroke-dashoffset="138.2"/>
+        </svg>
+      </div>
+      <div class="sc-bar-wrap">
+        <div class="sc-bar-bg"><div class="sc-bar-fg" id="progBar" style="width:0%"></div></div>
+        <div class="sc-bar-meta"><span id="progDone">0 done</span><span id="progLeft">0 left</span></div>
+      </div>
+    </div>
+
+    <p class="sb-section">Overview</p>
+    <button class="sb-link active" data-filter="all">
+      <svg class="sb-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      All Tasks <span class="sb-badge" id="ct-all">0</span>
+    </button>
+    <button class="sb-link" data-filter="pending">
+      <svg class="sb-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Pending <span class="sb-badge" id="ct-pd">0</span>
+    </button>
+    <button class="sb-link" data-filter="completed">
+      <svg class="sb-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      Completed <span class="sb-badge" id="ct-dn">0</span>
+    </button>
+    <button class="sb-link" data-filter="important">
+      <svg class="sb-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Important <span class="sb-badge" id="ct-im">0</span>
+    </button>
+
+    <p class="sb-section">Projects</p>
+    <button class="sb-link" data-project="work">
+      <svg class="sb-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      Work <span class="sb-badge" id="proj-Work">0</span>
+    </button>
+    <button class="sb-link" data-project="personal">
+      <svg class="sb-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Personal <span class="sb-badge" id="proj-Personal">0</span>
+    </button>
+    <button class="sb-link" data-project="health">
+      <svg class="sb-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Health <span class="sb-badge" id="proj-Health">0</span>
+    </button>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main-content">
+
+    <div class="page-top">
+      <div class="page-head">
+        <h1 id="pageTitle">All Tasks</h1>
+        <p class="page-date" id="pageDate"></p>
+      </div>
+      <button class="add-btn" id="openModal">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Task
+      </button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-tile t-indigo">
+        <div class="st-label">Total</div>
+        <div class="st-row"><div class="st-val" id="s-all">0</div><div class="st-icon" style="background:#ede9fe">📋</div></div>
+        <div class="st-note">tasks this week</div>
+      </div>
+      <div class="stat-tile t-green">
+        <div class="st-label">Completed</div>
+        <div class="st-row"><div class="st-val" id="s-dn">0</div><div class="st-icon" style="background:#d1fae5">✅</div></div>
+        <div class="st-note">finished tasks</div>
+      </div>
+      <div class="stat-tile t-amber">
+        <div class="st-label">Pending</div>
+        <div class="st-row"><div class="st-val" id="s-pd">0</div><div class="st-icon" style="background:#fef3c7">⏳</div></div>
+        <div class="st-note">need attention</div>
+      </div>
+      <div class="stat-tile t-red">
+        <div class="st-label">Overdue</div>
+        <div class="st-row"><div class="st-val" id="s-od">0</div><div class="st-icon" style="background:#fee2e2">🔥</div></div>
+        <div class="st-note">past due date</div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="pri-filters" id="priFilters">
+        <button class="pf-chip on" data-p="all">All</button>
+        <button class="pf-chip" data-p="high">🔴 High</button>
+        <button class="pf-chip" data-p="medium">🟡 Medium</button>
+        <button class="pf-chip" data-p="low">🟢 Low</button>
+      </div>
+      <select class="sort-pick" id="sortSel">
+        <option value="date">Sort: Due Date</option>
+        <option value="priority">Sort: Priority</option>
+        <option value="title">Sort: Title A–Z</option>
+      </select>
+      <div class="tb-spacer"></div>
+      <div class="view-switcher">
+        <button class="vs-btn on" id="vGrid" aria-label="Grid view">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </button>
+        <button class="vs-btn" id="vList" aria-label="List view">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Tasks render target -->
+    <div id="tasksOut"></div>
+
+  </main>
+</div>
+
+<!-- ═══ MODAL ═══ -->
+<div class="modal-wrap" id="modalWrap" role="dialog" aria-modal="true" aria-labelledby="mhd">
+  <div class="modal" id="modal">
+    <div class="modal-hdr">
+      <h2 id="mhd">Add New Task</h2>
+      <button class="m-close" id="mClose" aria-label="Close modal">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="mf">
+        <label for="mTitle">Task title *</label>
+        <input class="mi" type="text" id="mTitle" placeholder="What needs to be done?"/>
+      </div>
+      <div class="mf">
+        <label for="mDesc">Description</label>
+        <textarea class="mi" id="mDesc" placeholder="Add context, notes, or links…"></textarea>
+      </div>
+      <div class="mi-grid">
+        <div class="mf">
+          <label for="mDate">Due date</label>
+          <input class="mi" type="date" id="mDate"/>
+        </div>
+        <div class="mf">
+          <label for="mPri">Priority</label>
+          <select class="mi" id="mPri">
+            <option value="low">🟢 Low</option>
+            <option value="medium" selected>🟡 Medium</option>
+            <option value="high">🔴 High</option>
+          </select>
+        </div>
+      </div>
+      <div class="mf">
+        <label for="mProj">Project</label>
+        <select class="mi" id="mProj">
+          <option value="">— No project —</option>
+          <option value="work">Work</option>
+          <option value="personal">Personal</option>
+          <option value="health">Health</option>
+        </select>
+      </div>
+      <div class="mf" style="display:flex;align-items:center;gap:10px;margin-bottom:0">
+        <input type="checkbox" id="mImp" style="width:15px;height:15px;accent-color:var(--p);cursor:pointer;flex-shrink:0"/>
+        <label for="mImp" style="font-size:13.5px;font-weight:600;color:var(--text-2);cursor:pointer;text-transform:none;letter-spacing:0;margin-bottom:0">Mark as important ★</label>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="m-cancel" id="mCancel">Cancel</button>
+      <button class="m-save"   id="mSave">Save Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toastTxt"></span></div>
+<script src="{% static 'js/dashboard.js' %}"></script>
+</body>
+</html>

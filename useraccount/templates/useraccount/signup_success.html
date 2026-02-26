@@ -1,0 +1,726 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome to Tasko — Success!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ══════════════════════════════
+       DESIGN TOKENS (same as before)
+    ══════════════════════════════ */
+    :root {
+      --p:           #4F46E5;
+      --p-hover:     #3730a3;
+      --p-glow:      rgba(79,70,229,.22);
+      --p-faint:     #eef2ff;
+      --a:           #10B981;
+      --a-glow:      rgba(16,185,129,.22);
+      --bg:          #F3F4F8;
+      --card:        #FFFFFF;
+      --text:        #111827;
+      --text-2:      #6B7280;
+      --text-3:      #9CA3AF;
+      --danger:      #EF4444;
+      --border:      #E5E7EB;
+      --border-focus:#4F46E5;
+      --shadow:      0 24px 64px rgba(0,0,0,.12), 0 4px 20px rgba(0,0,0,.06);
+      --r:           12px;
+      --r-sm:        8px;
+      --ease:        200ms ease;
+      --spring:      340ms cubic-bezier(.34,1.56,.64,1);
+    }
+    [data-theme="dark"] {
+      --bg:     #0f172a;
+      --card:   #1e293b;
+      --text:   #f1f5f9;
+      --text-2: #94a3b8;
+      --text-3: #64748b;
+      --border: #334155;
+      --shadow: 0 24px 64px rgba(0,0,0,.5), 0 4px 20px rgba(0,0,0,.3);
+    }
+
+    html, body { height: 100%; font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+    body {
+      display: grid; grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+      background: var(--bg); color: var(--text);
+      transition: background .35s ease, color .35s ease;
+    }
+
+    /* ══════════════════════════════
+       THEME TOGGLE
+    ══════════════════════════════ */
+    .theme-toggle {
+      position: fixed; top: 18px; right: 20px; z-index: 999;
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--card); border: 1.5px solid var(--border);
+      box-shadow: 0 2px 14px rgba(0,0,0,.1);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: var(--text-2); transition: all 250ms cubic-bezier(.34,1.56,.64,1);
+    }
+    .theme-toggle:hover {
+      border-color: var(--p); color: var(--p);
+      transform: rotate(22deg) scale(1.1);
+      box-shadow: 0 4px 18px var(--p-glow);
+    }
+
+    /* ══════════════════════════════
+       LEFT PANEL — Celebration theme
+    ══════════════════════════════ */
+    .panel-left {
+      position: relative;
+      background: linear-gradient(148deg, #064e3b 0%, #047857 35%, #059669 65%, #0f172a 100%);
+      display: flex; flex-direction: column;
+      justify-content: space-between;
+      padding: 44px 52px;
+      overflow: hidden;
+    }
+    /* Ambient glow layers */
+    .panel-left::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 65% 55% at 12% 12%, rgba(16,185,129,.45) 0%, transparent 58%),
+        radial-gradient(ellipse 45% 45% at 85% 80%, rgba(245,158,11,.18) 0%, transparent 55%),
+        radial-gradient(ellipse 35% 28% at 60% 6%, rgba(250,204,21,.22) 0%, transparent 52%);
+      pointer-events: none;
+      animation: ambientShift 10s ease-in-out infinite alternate;
+    }
+    @keyframes ambientShift {
+      from { opacity: 1;   transform: scale(1)    translateY(0); }
+      to   { opacity: .82; transform: scale(1.05) translateY(-10px); }
+    }
+    /* Dot-grid texture */
+    .panel-left::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,.07) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+    }
+
+    /* ── Confetti animation ── */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 2px;
+      animation: confettiFall 4s linear infinite;
+      z-index: 0;
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(600px) rotate(360deg); opacity: 0; }
+    }
+
+    /* ── Brand mark ── */
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; position: relative; z-index: 1;
+    }
+    .brand-gem {
+      width: 38px; height: 38px; border-radius: 11px;
+      background: rgba(255,255,255,.12);
+      border: 1.5px solid rgba(255,255,255,.22);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; color: #fff;
+      box-shadow: 0 2px 12px rgba(0,0,0,.2);
+    }
+    .brand-name {
+      font-family: 'Fraunces', serif;
+      font-size: 22px; font-weight: 700;
+      color: #fff; letter-spacing: -.4px;
+    }
+
+    /* ── Left panel content ── */
+    .panel-left-body { position: relative; z-index: 1; }
+    .pl-eyebrow {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+      border-radius: 99px; padding: 5px 14px 5px 8px;
+      font-size: 12px; font-weight: 600; color: rgba(255,255,255,.8);
+      margin-bottom: 28px;
+      animation: slideRight .5s .1s var(--spring) both;
+    }
+    @keyframes slideRight { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: translateX(0); } }
+    .pl-eyebrow-dot {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px;
+    }
+
+    .pl-heading {
+      font-family: 'Fraunces', serif;
+      font-size: 38px; font-weight: 700;
+      color: #fff; letter-spacing: -1.2px; line-height: 1.15;
+      margin-bottom: 18px;
+      animation: slideRight .5s .15s var(--spring) both;
+    }
+    .pl-heading em { font-style: italic; color: #fde047; }
+
+    .pl-sub {
+      font-size: 15px; color: rgba(255,255,255,.62);
+      line-height: 1.7; max-width: 360px; margin-bottom: 36px;
+      animation: slideRight .5s .2s var(--spring) both;
+    }
+
+    /* ── Steps indicator — all complete ── */
+    .steps-track {
+      display: flex; align-items: center; gap: 0;
+      animation: slideRight .5s .25s var(--spring) both;
+    }
+    .step {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .step-circle {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800;
+      flex-shrink: 0;
+      transition: all var(--ease);
+    }
+    .step-circle.done {
+      background: var(--a); color: #fff;
+      box-shadow: 0 0 0 4px rgba(16,185,129,.25);
+    }
+    .step-label { font-size: 12.5px; font-weight: 600; }
+    .step-label .sl-name { color: rgba(255,255,255,.9); }
+    .step-label .sl-desc { color: rgba(255,255,255,.45); font-size: 11px; margin-top: 1px; }
+    .step-connector {
+      width: 36px; height: 1.5px;
+      background: rgba(255,255,255,.15);
+      margin: 0 2px;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .step-connector.done::after {
+      content: ''; position: absolute; inset: 0;
+      background: var(--a); border-radius: 99px;
+    }
+
+    /* ── Celebration stats ── */
+    .celebration-stats {
+      position: relative; z-index: 1;
+      background: rgba(255,255,255,.06);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 20px;
+      padding: 24px;
+      margin-top: 28px;
+      animation: slideRight .5s .3s var(--spring) both;
+    }
+    .stat-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .stat-row:last-child { margin-bottom: 0; }
+    .stat-label {
+      color: rgba(255,255,255,.7);
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .stat-value {
+      color: #fff;
+      font-size: 20px;
+      font-weight: 800;
+      font-family: 'Fraunces', serif;
+    }
+    .stat-divider {
+      height: 1px;
+      background: rgba(255,255,255,.1);
+      margin: 16px 0;
+    }
+
+    /* ══════════════════════════════
+       RIGHT PANEL — Success
+    ══════════════════════════════ */
+    .panel-right {
+      display: flex; align-items: center; justify-content: center;
+      padding: 40px 24px;
+      background: var(--bg);
+      transition: background .35s;
+    }
+    .form-shell {
+      width: 100%; max-width: 440px;
+      animation: formIn .55s .05s cubic-bezier(.16,1,.3,1) both;
+    }
+    @keyframes formIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Step pill — all done ── */
+    .step-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--a); border: 1px solid rgba(16,185,129,.2);
+      border-radius: 99px; padding: 4px 12px 4px 6px;
+      font-size: 12px; font-weight: 700; color: #fff;
+      margin-bottom: 22px;
+    }
+    .sp-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: #fff; color: var(--a);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800;
+    }
+
+    /* ── Success animation ── */
+    .success-checkmark {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+      position: relative;
+    }
+    .check-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--a), #34d399);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: scaleIn 0.5s var(--spring);
+    }
+    @keyframes scaleIn {
+      0% { transform: scale(0); }
+      100% { transform: scale(1); }
+    }
+    .check-icon svg {
+      width: 40px;
+      height: 40px;
+      stroke: #fff;
+      stroke-width: 3;
+      stroke-dasharray: 48;
+      stroke-dashoffset: 48;
+      animation: drawCheck 0.6s 0.3s forwards;
+    }
+    @keyframes drawCheck {
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* ── Welcome message ── */
+    .welcome-title {
+      font-family: 'Fraunces', serif;
+      font-size: 32px;
+      font-weight: 700;
+      text-align: center;
+      color: var(--text);
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+    .welcome-sub {
+      text-align: center;
+      color: var(--text-2);
+      font-size: 15px;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    /* ── User card ── */
+    .user-card {
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 28px;
+      transition: all var(--ease);
+    }
+    .user-card:hover {
+      border-color: var(--a);
+      box-shadow: 0 8px 24px var(--a-glow);
+    }
+    .user-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .user-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--p), var(--a));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .user-info {
+      flex: 1;
+    }
+    .user-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .user-email {
+      font-size: 13px;
+      color: var(--text-2);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .user-details {
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+    .detail-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .detail-row:last-child { margin-bottom: 0; }
+    .detail-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: var(--p-faint);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--p);
+    }
+    .detail-text {
+      font-size: 14px;
+      color: var(--text-2);
+    }
+    .detail-text strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    /* ── Action buttons ── */
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .primary-btn {
+      grid-column: span 2;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--p) 0%, #6d28d9 100%);
+      color: #fff;
+      border: none;
+      border-radius: var(--r-sm);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all var(--spring);
+      box-shadow: 0 3px 14px var(--p-glow);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .primary-btn:hover {
+      background: linear-gradient(135deg, var(--p-hover) 0%, #5b21b6 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(79,70,229,.45);
+    }
+    .primary-btn::after {
+      content: '';
+      position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+      transform: skewX(-20deg);
+      transition: left .5s ease;
+    }
+    .primary-btn:hover::after { left: 150%; }
+
+    .secondary-btn {
+      padding: 14px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      color: var(--text-2);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--ease);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .secondary-btn:hover {
+      border-color: var(--p);
+      color: var(--p);
+      background: var(--p-faint);
+    }
+
+    /* ── Quick tips ── */
+    .quick-tips {
+      background: var(--p-faint);
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 24px;
+    }
+    .tips-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--p);
+      margin-bottom: 12px;
+    }
+    .tips-list {
+      list-style: none;
+    }
+    .tips-list li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-2);
+      margin-bottom: 8px;
+    }
+    .tips-list li:last-child { margin-bottom: 0; }
+    .tips-list li svg {
+      color: var(--a);
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════ */
+    @media(max-width: 900px) {
+      body { grid-template-columns: 1fr; }
+      .panel-left { display: none; }
+      .panel-right { padding: 48px 20px 60px; align-items: flex-start; padding-top: 80px; }
+    }
+    @media(max-width: 480px) {
+      .form-shell { max-width: 100%; }
+      .action-grid { grid-template-columns: 1fr; }
+      .primary-btn { grid-column: span 1; }
+      .welcome-title { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── THEME TOGGLE ── -->
+<button class="theme-toggle" id="themeBtn" aria-label="Toggle dark mode">
+  <svg id="themeIco" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </svg>
+</button>
+
+<!-- ══════════════════════════
+     LEFT PANEL - Celebration
+══════════════════════════ -->
+<div class="panel-left" id="leftPanel">
+
+  <!-- Confetti pieces (generated by JS) -->
+  <div id="confettiContainer"></div>
+
+  <!-- Brand -->
+  <a href="index.html" class="brand">
+    <div class="brand-gem">T</div>
+    <span class="brand-name">Tasko</span>
+  </a>
+
+  <!-- Main copy -->
+  <div class="panel-left-body">
+    <div class="pl-eyebrow">
+      <div class="pl-eyebrow-dot">🎉</div>
+      Step 3 of 3 · Complete!
+    </div>
+    <h2 class="pl-heading">
+      You're officially<br/>part of the<br/><em>Tasko family!</em>
+    </h2>
+    <p class="pl-sub">
+      Your workspace is ready. We're thrilled to have you onboard — get ready to conquer your tasks like never before.
+    </p>
+
+    <!-- Progress steps — all complete -->
+    <div class="steps-track">
+      <div class="step">
+        <div class="step-circle done">✓</div>
+        <div class="step-label">
+          <div class="sl-name">Email verified</div>
+          <div class="sl-desc">Complete</div>
+        </div>
+      </div>
+      <div class="step-connector done"></div>
+      <div class="step">
+        <div class="step-circle done">✓</div>
+        <div class="step-label">
+          <div class="sl-name">Code verified</div>
+          <div class="sl-desc">Complete</div>
+        </div>
+      </div>
+      <div class="step-connector done"></div>
+      <div class="step">
+        <div class="step-circle done">✓</div>
+        <div class="step-label">
+          <div class="sl-name">Account created</div>
+          <div class="sl-desc">Success!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Celebration stats -->
+    <div class="celebration-stats">
+      <div class="stat-row">
+        <span class="stat-label">New members today</span>
+        <span class="stat-value">1,247</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Tasks completed</span>
+        <span class="stat-value">84.2K</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-row">
+        <span class="stat-label">You are user</span>
+        <span class="stat-value">Thank You for register !</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════
+     RIGHT PANEL - Success
+══════════════════════════ -->
+<div class="panel-right">
+  <div class="form-shell">
+
+    <!-- Step pill — all done -->
+    <div class="step-pill">
+      <div class="sp-num">✓</div>
+      Step 3 of 3 · Done!
+    </div>
+
+    <!-- Success animation -->
+    <div class="success-checkmark">
+      <div class="check-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Welcome message -->
+    <h1 class="welcome-title">Welcome to Tasko,<br/><span id="displayFirstName">Friend</span>!</h1>
+    <p class="welcome-sub">Your account is ready and waiting. Let's make today productive.</p>
+
+    <!-- User card -->
+    <div class="user-card" id="userCard">
+      <div class="user-header">
+        <div class="user-avatar" id="userInitials">JD</div>
+        <div class="user-info">
+          <div class="user-name" id="userFullName">Jane Doe</div>
+          <div class="user-email">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
+            <span id="userEmail">jane@company.com</span>
+          </div>
+        </div>
+      </div>
+      <div class="user-details">
+        <div class="detail-row">
+          <div class="detail-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <div class="detail-text">
+            Member since <strong id="memberSince">February 24, 2026</strong>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 12h-4l-3 9-4-18-3 9H2"/>
+            </svg>
+          </div>
+          <div class="detail-text">
+            Free plan · <strong id="storageInfo">100 tasks/month</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="action-grid">
+      <a href="/dashboard/" class="primary-btn" id="goToDashboard">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        Go to Dashboard
+      </a>
+      <a href="#" class="secondary-btn" id="tourBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="12" x2="12" y2="16"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        Quick Tour
+      </a>
+      <a href="#" class="secondary-btn" id="inviteBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>
+        </svg>
+        Invite Team
+      </a>
+    </div>
+
+    <!-- Quick tips -->
+    <div class="quick-tips">
+      <div class="tips-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><circle cx="12" cy="8" r="0.5" fill="currentColor"/>
+        </svg>
+        Quick tips to get started
+      </div>
+      <ul class="tips-list">
+        <li>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Create your first task with the + button
+        </li>
+        <li>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Use filters to organize by priority
+        </li>
+        <li>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Toggle dark mode from the top button
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+<script src="{% static 'js/signup_success.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,720 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verify Code — Tasko</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ══════════════════════════════
+       DESIGN TOKENS (same as email_enter)
+    ══════════════════════════════ */
+    :root {
+      --p:           #4F46E5;
+      --p-hover:     #3730a3;
+      --p-glow:      rgba(79,70,229,.22);
+      --p-faint:     #eef2ff;
+      --a:           #10B981;
+      --a-glow:      rgba(16,185,129,.22);
+      --bg:          #F3F4F8;
+      --card:        #FFFFFF;
+      --text:        #111827;
+      --text-2:      #6B7280;
+      --text-3:      #9CA3AF;
+      --danger:      #EF4444;
+      --border:      #E5E7EB;
+      --border-focus:#4F46E5;
+      --shadow:      0 24px 64px rgba(0,0,0,.12), 0 4px 20px rgba(0,0,0,.06);
+      --r:           12px;
+      --r-sm:        8px;
+      --ease:        200ms ease;
+      --spring:      340ms cubic-bezier(.34,1.56,.64,1);
+    }
+    [data-theme="dark"] {
+      --bg:     #0f172a;
+      --card:   #1e293b;
+      --text:   #f1f5f9;
+      --text-2: #94a3b8;
+      --text-3: #64748b;
+      --border: #334155;
+      --shadow: 0 24px 64px rgba(0,0,0,.5), 0 4px 20px rgba(0,0,0,.3);
+    }
+
+    html, body { height: 100%; font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+    body {
+      display: grid; grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+      background: var(--bg); color: var(--text);
+      transition: background .35s ease, color .35s ease;
+    }
+
+    /* ══════════════════════════════
+       THEME TOGGLE
+    ══════════════════════════════ */
+    .theme-toggle {
+      position: fixed; top: 18px; right: 20px; z-index: 999;
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--card); border: 1.5px solid var(--border);
+      box-shadow: 0 2px 14px rgba(0,0,0,.1);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: var(--text-2); transition: all 250ms cubic-bezier(.34,1.56,.64,1);
+    }
+    .theme-toggle:hover {
+      border-color: var(--p); color: var(--p);
+      transform: rotate(22deg) scale(1.1);
+      box-shadow: 0 4px 18px var(--p-glow);
+    }
+
+    /* ══════════════════════════════
+       LEFT PANEL — Indigo theme (matching email_enter)
+    ══════════════════════════════ */
+    .panel-left {
+      position: relative;
+      background: linear-gradient(148deg, #1e1b4b 0%, #312e81 35%, #3730a3 65%, #0f172a 100%);
+      display: flex; flex-direction: column;
+      justify-content: space-between;
+      padding: 44px 52px;
+      overflow: hidden;
+    }
+    /* Ambient glow layers */
+    .panel-left::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 65% 55% at 12% 12%, rgba(99,102,241,.45) 0%, transparent 58%),
+        radial-gradient(ellipse 45% 45% at 85% 80%, rgba(16,185,129,.18) 0%, transparent 55%),
+        radial-gradient(ellipse 35% 28% at 60% 6%, rgba(139,92,246,.22) 0%, transparent 52%);
+      pointer-events: none;
+      animation: ambientShift 10s ease-in-out infinite alternate;
+    }
+    @keyframes ambientShift {
+      from { opacity: 1;   transform: scale(1)    translateY(0); }
+      to   { opacity: .82; transform: scale(1.05) translateY(-10px); }
+    }
+    /* Dot-grid texture */
+    .panel-left::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,.07) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+    }
+
+    /* ── Brand mark ── */
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; position: relative; z-index: 1;
+    }
+    .brand-gem {
+      width: 38px; height: 38px; border-radius: 11px;
+      background: rgba(255,255,255,.12);
+      border: 1.5px solid rgba(255,255,255,.22);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; color: #fff;
+      box-shadow: 0 2px 12px rgba(0,0,0,.2);
+    }
+    .brand-name {
+      font-family: 'Fraunces', serif;
+      font-size: 22px; font-weight: 700;
+      color: #fff; letter-spacing: -.4px;
+    }
+
+    /* ── Left panel content ── */
+    .panel-left-body { position: relative; z-index: 1; }
+    .pl-eyebrow {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+      border-radius: 99px; padding: 5px 14px 5px 8px;
+      font-size: 12px; font-weight: 600; color: rgba(255,255,255,.8);
+      margin-bottom: 28px;
+      animation: slideRight .5s .1s var(--spring) both;
+    }
+    @keyframes slideRight { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: translateX(0); } }
+    .pl-eyebrow-dot {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--a), #34d399);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px;
+    }
+
+    .pl-heading {
+      font-family: 'Fraunces', serif;
+      font-size: 38px; font-weight: 700;
+      color: #fff; letter-spacing: -1.2px; line-height: 1.15;
+      margin-bottom: 18px;
+      animation: slideRight .5s .15s var(--spring) both;
+    }
+    .pl-heading em { font-style: italic; color: #a5b4fc; }
+
+    .pl-sub {
+      font-size: 15px; color: rgba(255,255,255,.62);
+      line-height: 1.7; max-width: 360px; margin-bottom: 36px;
+      animation: slideRight .5s .2s var(--spring) both;
+    }
+
+    /* ── Steps indicator — now step 2 active ── */
+    .steps-track {
+      display: flex; align-items: center; gap: 0;
+      animation: slideRight .5s .25s var(--spring) both;
+    }
+    .step {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .step-circle {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800;
+      flex-shrink: 0;
+      transition: all var(--ease);
+    }
+    .step-circle.active {
+      background: #fff; color: var(--p);
+      box-shadow: 0 0 0 4px rgba(255,255,255,.2);
+    }
+    .step-circle.done {
+      background: var(--a); color: #fff;
+      box-shadow: 0 0 0 4px rgba(16,185,129,.25);
+    }
+    .step-circle.upcoming {
+      background: rgba(255,255,255,.1);
+      border: 1.5px solid rgba(255,255,255,.2);
+      color: rgba(255,255,255,.45);
+    }
+    .step-label { font-size: 12.5px; font-weight: 600; }
+    .step-label .sl-name { color: rgba(255,255,255,.9); }
+    .step-label .sl-desc { color: rgba(255,255,255,.45); font-size: 11px; margin-top: 1px; }
+    .step-label.active .sl-name { color: #fff; }
+    .step-connector {
+      width: 36px; height: 1.5px;
+      background: rgba(255,255,255,.15);
+      margin: 0 2px;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .step-connector.done::after {
+      content: ''; position: absolute; inset: 0;
+      background: var(--a); border-radius: 99px;
+    }
+
+    /* ── Testimonial ── */
+    .testimonial {
+      position: relative; z-index: 1;
+      background: rgba(255,255,255,.06);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 20px;
+      padding: 22px;
+      margin-top: 28px;
+      animation: slideRight .5s .3s var(--spring) both;
+    }
+    .testimonial-quote {
+      font-size: 15px;
+      font-style: italic;
+      color: rgba(255,255,255,.9);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .testimonial-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: linear-gradient(135deg, #a78bfa, #7c3aed);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: #fff;
+    }
+    .testimonial-info {
+      font-size: 13px;
+    }
+    .testimonial-name {
+      color: #fff; font-weight: 700;
+    }
+    .testimonial-role {
+      color: rgba(255,255,255,.55); font-size: 11px;
+    }
+
+    /* ══════════════════════════════
+       RIGHT PANEL — OTP Form
+    ══════════════════════════════ */
+    .panel-right {
+      display: flex; align-items: center; justify-content: center;
+      padding: 40px 24px;
+      background: var(--bg);
+      transition: background .35s;
+    }
+    .form-shell {
+      width: 100%; max-width: 440px;
+      animation: formIn .55s .05s cubic-bezier(.16,1,.3,1) both;
+    }
+    @keyframes formIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Step pill — now step 2 ── */
+    .step-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--p-faint); border: 1px solid rgba(79,70,229,.2);
+      border-radius: 99px; padding: 4px 12px 4px 6px;
+      font-size: 12px; font-weight: 700; color: var(--p);
+      margin-bottom: 22px;
+    }
+    .sp-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--p); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800;
+    }
+
+    /* ── Heading ── */
+    .form-title {
+      font-family: 'Fraunces', serif;
+      font-size: 30px; font-weight: 700;
+      letter-spacing: -.6px; line-height: 1.15;
+      color: var(--text); margin-bottom: 8px;
+    }
+    .form-sub {
+      font-size: 14.5px; color: var(--text-2);
+      line-height: 1.6; margin-bottom: 20px;
+    }
+
+    /* ── Email display card ── */
+    .email-display-card {
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 16px 18px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all var(--ease);
+    }
+    .email-display-card:hover {
+      border-color: var(--p);
+      box-shadow: 0 4px 12px var(--p-glow);
+    }
+    .email-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .email-icon {
+      width: 38px; height: 38px;
+      background: var(--p-faint);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--p);
+    }
+    .email-address {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 14px;
+      word-break: break-all;
+    }
+    .change-email {
+      color: var(--p);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 6px;
+      background: var(--p-faint);
+      transition: all var(--ease);
+    }
+    .change-email:hover {
+      background: var(--p);
+      color: #fff;
+    }
+
+    /* ── OTP Inputs ── */
+    .otp-container {
+      margin: 32px 0 24px;
+    }
+    .otp-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-2);
+      margin-bottom: 10px;
+      display: block;
+    }
+    .otp-grid {
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+    }
+    .otp-digit {
+      width: 58px;
+      height: 64px;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      background: var(--card);
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      outline: none;
+      transition: all var(--spring);
+      font-family: 'DM Sans', monospace;
+    }
+    .otp-digit:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 4px var(--p-glow);
+      transform: scale(1.02);
+    }
+    .otp-digit.valid {
+      border-color: var(--a);
+      background: rgba(16,185,129,.05);
+    }
+    .otp-digit.error {
+      border-color: var(--danger);
+      animation: shake 0.3s ease;
+      background: rgba(239,68,68,.05);
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    /* ── Error message ── */
+    .field-err {
+      font-size: 12px; color: var(--danger); font-weight: 600;
+      margin-top: 8px; display: flex; align-items: center; gap: 5px;
+      min-height: 18px;
+      opacity: 0; transform: translateY(-4px);
+      transition: all var(--ease);
+    }
+    .field-err.show { opacity: 1; transform: translateY(0); }
+
+    /* ── Timer & Resend ── */
+    .timer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 24px 0 20px;
+      padding: 12px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .timer-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-2);
+      font-size: 13px;
+    }
+    .timer-display {
+      font-family: 'DM Sans', monospace;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--p);
+      background: var(--p-faint);
+      padding: 6px 12px;
+      border-radius: 30px;
+      letter-spacing: 1px;
+    }
+    .resend-btn {
+      background: none;
+      border: none;
+      color: var(--p);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 30px;
+      transition: all var(--ease);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .resend-btn:hover:not(:disabled) {
+      color: var(--p-hover);
+      background: var(--p-faint);
+      text-decoration: none;
+    }
+    .resend-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      text-decoration: none;
+    }
+
+    /* ── Submit button (same as email_enter) ── */
+    .submit-btn {
+      width: 100%; padding: 14px;
+      background: linear-gradient(135deg, var(--p) 0%, #6d28d9 100%);
+      color: #fff; border: none; border-radius: var(--r-sm);
+      font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700;
+      cursor: pointer; position: relative; overflow: hidden;
+      transition: all var(--spring);
+      box-shadow: 0 3px 14px var(--p-glow), inset 0 1px 0 rgba(255,255,255,.12);
+      margin-top: 8px;
+    }
+    .submit-btn:hover {
+      background: linear-gradient(135deg, var(--p-hover) 0%, #5b21b6 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(79,70,229,.45), inset 0 1px 0 rgba(255,255,255,.12);
+    }
+    .submit-btn:active { transform: translateY(0); }
+    /* Shimmer sweep */
+    .submit-btn::after {
+      content: '';
+      position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+      transform: skewX(-20deg);
+      transition: left .5s ease;
+    }
+    .submit-btn:hover::after { left: 150%; }
+
+    /* ── Loading state ── */
+    .submit-btn.loading { pointer-events: none; opacity: .85; }
+    .btn-inner { display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-spinner {
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.35);
+      border-top-color: #fff;
+      animation: spin .65s linear infinite;
+      display: none; flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .submit-btn.loading .btn-spinner { display: block; }
+    .submit-btn.loading .btn-arrow { display: none; }
+
+    /* ── Success state ── */
+    .submit-btn.success {
+      background: linear-gradient(135deg, #059669, #10B981) !important;
+    }
+
+    /* ── Trust badges (same as email_enter) ── */
+    .trust-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 20px; margin-top: 28px; flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 11.5px; color: var(--text-3); font-weight: 600;
+    }
+    .trust-item svg { color: var(--a); flex-shrink: 0; }
+
+    /* ── Back link ── */
+    .back-link {
+      text-align: center; margin-top: 16px;
+    }
+    .back-link a {
+      color: var(--text-3);
+      text-decoration: none;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color var(--ease);
+    }
+    .back-link a:hover {
+      color: var(--p);
+    }
+
+    /* ══════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════ */
+    @media(max-width: 900px) {
+      body { grid-template-columns: 1fr; }
+      .panel-left { display: none; }
+      .panel-right { padding: 48px 20px 60px; align-items: flex-start; padding-top: 80px; }
+    }
+    @media(max-width: 480px) {
+      .form-shell { max-width: 100%; }
+      .otp-grid { gap: 6px; }
+      .otp-digit { width: 45px; height: 52px; font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── THEME TOGGLE ── -->
+<button class="theme-toggle" id="themeBtn" aria-label="Toggle dark mode">
+  <svg id="themeIco" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </svg>
+</button>
+
+<!-- ══════════════════════════
+     LEFT PANEL
+══════════════════════════ -->
+<div class="panel-left">
+
+  <!-- Brand -->
+  <a href="index.html" class="brand">
+    <div class="brand-gem">T</div>
+    <span class="brand-name">Tasko</span>
+  </a>
+
+  <!-- Main copy -->
+  <div class="panel-left-body">
+    <div class="pl-eyebrow">
+      <div class="pl-eyebrow-dot">✦</div>
+      Step 2 of 3 · Verify your email
+    </div>
+    <h2 class="pl-heading">
+      Check your<br/>inbox for the<br/><em>secret code</em>
+    </h2>
+    <p class="pl-sub">
+      We've sent a 6-digit code to your email. Enter it below and you'll be ready to set up your workspace in seconds.
+    </p>
+
+    <!-- Progress steps — step 2 active -->
+    <div class="steps-track">
+      <div class="step">
+        <div class="step-circle done">✓</div>
+        <div class="step-label">
+          <div class="sl-name">Your email</div>
+          <div class="sl-desc">Verified?</div>
+        </div>
+      </div>
+      <div class="step-connector done"></div>
+      <div class="step">
+        <div class="step-circle active">2</div>
+        <div class="step-label active">
+          <div class="sl-name">Verify code</div>
+          <div class="sl-desc">6‑digit PIN</div>
+        </div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step">
+        <div class="step-circle upcoming">3</div>
+        <div class="step-label">
+          <div class="sl-name">Create account</div>
+          <div class="sl-desc">Name & password</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Testimonial -->
+    <div class="testimonial">
+      <div class="testimonial-quote">
+        “The fastest sign-up I've ever experienced. Code arrived in seconds and the interface is gorgeous.”
+      </div>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">JD</div>
+        <div class="testimonial-info">
+          <div class="testimonial-name">Jessica Davies</div>
+          <div class="testimonial-role">Product Lead at Loom</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════
+     RIGHT PANEL
+══════════════════════════ -->
+<div class="panel-right">
+  <div class="form-shell">
+
+    <!-- Step indicator pill -->
+    <div class="step-pill">
+      <div class="sp-num">2</div>
+      Step 2 of 3
+    </div>
+
+    <h1 class="form-title">Enter verification<br/>code</h1>
+    <p class="form-sub">We sent a 6-digit code to your email. It expires in 5 minutes.</p>
+
+    <!-- Email display card (email passed from previous page) -->
+    <div class="email-display-card" id="emailDisplayCard">
+      <div class="email-info">
+        <div class="email-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+        </div>
+        <span class="email-address" id="displayEmail">loading...</span>
+      </div>
+      <a href="{% url 'email_enter' %}" class="change-email">Change</a>
+    </div>
+
+    <!-- OTP Form -->
+    <form id="otpForm" novalidate>
+      <div class="otp-container">
+        <label class="otp-label">6-digit verification code</label>
+        <div class="otp-grid" id="otpGrid">
+          <input type="text" class="otp-digit" id="otp1" maxlength="1" inputmode="numeric" autofocus>
+          <input type="text" class="otp-digit" id="otp2" maxlength="1" inputmode="numeric">
+          <input type="text" class="otp-digit" id="otp3" maxlength="1" inputmode="numeric">
+          <input type="text" class="otp-digit" id="otp4" maxlength="1" inputmode="numeric">
+          <input type="text" class="otp-digit" id="otp5" maxlength="1" inputmode="numeric">
+          <input type="text" class="otp-digit" id="otp6" maxlength="1" inputmode="numeric">
+        </div>
+        <p class="field-err" id="otpErr" role="alert"></p>
+      </div>
+
+      <!-- Timer & Resend -->
+      <div class="timer-row">
+        <div class="timer-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          Code expires in
+        </div>
+        <div class="timer-display" id="timerDisplay">05:00</div>
+        <button type="button" class="resend-btn" id="resendBtn" disabled>Resend</button>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="submit-btn" id="submitBtn">
+        <div class="btn-inner">
+          <div class="btn-spinner" id="btnSpinner"></div>
+          <span id="btnText">Verify & Continue</span>
+          <svg class="btn-arrow" id="btnArrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </div>
+      </button>
+    </form>
+
+    <!-- Back link -->
+    <div class="back-link">
+      <a href="email_enter.html">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Back to email
+      </a>
+    </div>
+
+    <!-- Trust badges (same as email_enter) -->
+    <div class="trust-row">
+      <div class="trust-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        SOC 2 Compliant
+      </div>
+      <div class="trust-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        256-bit Encryption
+      </div>
+      <div class="trust-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        No spam, ever
+      </div>
+    </div>
+
+  </div>
+</div>
+<script src="{% static 'js/otp_verify.js' %}"></script>
+</body>
+</html>

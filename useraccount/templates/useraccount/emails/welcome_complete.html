@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="color-scheme" content="light"/>
+<meta name="supported-color-schemes" content="light"/>
+<title>Welcome to Tasko — Account Created</title>
+<style>
+  /* Email-safe CSS */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #F3F4F8;
+    margin: 0;
+    padding: 40px 16px;
+  }
+  .email-shell {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .pre-header {
+    font-size: 12px;
+    color: #94A3B8;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .email-card {
+    background: #FFFFFF;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    border: 1px solid #E2E8F0;
+  }
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #059669 0%, #10B981 70%, #34D399 100%);
+    padding: 48px 32px;
+    text-align: center;
+  }
+  .brand {
+    margin-bottom: 24px;
+  }
+  .brand-gem {
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 12px;
+    display: inline-block;
+    line-height: 40px;
+    text-align: center;
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .brand-name {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #FFFFFF;
+    letter-spacing: -0.3px;
+    vertical-align: middle;
+  }
+  .celebration-icon {
+    width: 90px;
+    height: 90px;
+    background: rgba(255,255,255,0.15);
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    line-height: 90px;
+    text-align: center;
+    font-size: 48px;
+  }
+  .hero-title {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+  }
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.9);
+  }
+  /* Body */
+  .body {
+    padding: 40px 32px;
+  }
+  .greeting {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 16px;
+  }
+  .text {
+    font-size: 15px;
+    color: #475569;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  /* User Card */
+  .user-card {
+    background: linear-gradient(135deg, #F0FDF4, #DCFCE7);
+    border: 1px solid #86EFAC;
+    border-radius: 20px;
+    padding: 24px;
+    margin: 28px 0;
+  }
+  .user-avatar {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #059669, #10B981);
+    border-radius: 18px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 20px;
+    text-align: center;
+    line-height: 64px;
+    color: #FFFFFF;
+    font-size: 28px;
+    font-weight: 700;
+    box-shadow: 0 8px 16px rgba(16,185,129,0.2);
+  }
+  .user-info {
+    display: inline-block;
+    vertical-align: middle;
+    width: 65%;
+  }
+  .user-name {
+    font-size: 20px;
+    font-weight: 800;
+    color: #064E3B;
+    margin-bottom: 6px;
+  }
+  .user-email {
+    font-size: 14px;
+    color: #065F46;
+    margin-bottom: 6px;
+  }
+  .user-email svg {
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+  .user-date {
+    font-size: 13px;
+    color: #047857;
+  }
+  .user-date svg {
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+  /* Features */
+  .features-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 32px 0 20px;
+  }
+  .features-grid {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .feature-item {
+    width: 33.33%;
+    padding: 12px;
+    text-align: center;
+    vertical-align: top;
+  }
+  .feature-emoji {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .feature-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 4px;
+  }
+  .feature-desc {
+    font-size: 12px;
+    color: #64748B;
+    line-height: 1.5;
+  }
+  /* CTA */
+  .cta {
+    text-align: center;
+    margin: 32px 0;
+  }
+  .cta-button {
+    display: inline-block;
+    padding: 16px 42px;
+    background: linear-gradient(135deg, #059669 0%, #10B981 100%);
+    border-radius: 14px;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(16,185,129,0.3);
+  }
+  /* Tips */
+  .tips-list {
+    background: #F8FAFC;
+    border-radius: 16px;
+    padding: 20px;
+    margin: 28px 0;
+  }
+  .tips-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 16px;
+  }
+  .tip-item {
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #475569;
+  }
+  .tip-item:last-child { margin-bottom: 0; }
+  .tip-check {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: #10B981;
+    border-radius: 50%;
+    color: #FFFFFF;
+    text-align: center;
+    line-height: 20px;
+    font-size: 12px;
+    margin-right: 10px;
+  }
+  hr {
+    border: none;
+    border-top: 1px solid #F1F5F9;
+    margin: 28px 0;
+  }
+  /* Footer */
+  .footer {
+    background: #F8FAFC;
+    border-top: 1px solid #F1F5F9;
+    padding: 32px;
+    text-align: center;
+  }
+  .footer-logo {
+    margin-bottom: 16px;
+  }
+  .footer-gem {
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, #059669, #10B981);
+    border-radius: 8px;
+    display: inline-block;
+    line-height: 28px;
+    text-align: center;
+    color: #FFFFFF;
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-weight: 700;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .footer-name {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0F172A;
+    vertical-align: middle;
+  }
+  .footer-text {
+    font-size: 13px;
+    color: #94A3B8;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .footer-links a {
+    color: #94A3B8;
+    font-size: 12px;
+    text-decoration: none;
+    margin: 0 8px;
+  }
+  .footer-sep {
+    color: #CBD5E1;
+    font-size: 12px;
+  }
+  .copyright {
+    font-size: 12px;
+    color: #CBD5E1;
+  }
+  @media only screen and (max-width: 480px) {
+    .user-avatar { display: block; margin: 0 auto 16px; }
+    .user-info { display: block; width: 100%; text-align: center; }
+    .feature-item { display: block; width: 100%; padding: 12px 0; }
+    .body { padding: 30px 20px; }
+    .footer { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+  <div class="email-shell">
+    <div class="pre-header">Tasko · Your account is ready! Welcome aboard 🎉</div>
+    
+    <div class="email-card">
+      <!-- Hero -->
+      <div class="hero">
+        <div class="brand">
+          <span class="brand-gem">T</span>
+          <span class="brand-name">Tasko</span>
+        </div>
+        <div class="celebration-icon">🎉</div>
+        <h1 class="hero-title">Welcome to Tasko!</h1>
+        <p class="hero-sub">Your productivity journey starts now.</p>
+      </div>
+      
+      <!-- Body -->
+      <div class="body">
+        <p class="greeting">Hey {{ first_name|default:"there" }},</p>
+        <p class="text">
+          <strong>Welcome to the Tasko family!</strong> We're thrilled to have you onboard. 
+          Your account has been successfully created and is ready to help you organize, 
+          prioritize, and conquer your tasks.
+        </p>
+        
+        <!-- User card -->
+        <div class="user-card">
+          <div class="user-avatar">{{ initials|default:"JD" }}</div>
+          <div class="user-info">
+            <div class="user-name">{{ full_name|default:"Jane Doe" }}</div>
+            <div class="user-email">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
+              {{ email }}
+            </div>
+            <div class="user-date">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              Member since {{ join_date }}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Features -->
+        <div class="features-title">✨ What you can do with Tasko</div>
+        <table class="features-grid" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td class="feature-item">
+              <span class="feature-emoji">📋</span>
+              <div class="feature-name">Smart Tasks</div>
+              <div class="feature-desc">Organize, filter & search</div>
+            </td>
+            <td class="feature-item">
+              <span class="feature-emoji">📊</span>
+              <div class="feature-name">Progress</div>
+              <div class="feature-desc">Visual insights</div>
+            </td>
+            <td class="feature-item">
+              <span class="feature-emoji">🌙</span>
+              <div class="feature-name">Dark Mode</div>
+              <div class="feature-desc">Easy on the eyes</div>
+            </td>
+          </tr>
+          <tr>
+            <td class="feature-item">
+              <span class="feature-emoji">🏷️</span>
+              <div class="feature-name">Projects</div>
+              <div class="feature-desc">Work, Personal, Health</div>
+            </td>
+            <td class="feature-item">
+              <span class="feature-emoji">🔔</span>
+              <div class="feature-name">Reminders</div>
+              <div class="feature-desc">Never miss a task</div>
+            </td>
+            <td class="feature-item">
+              <span class="feature-emoji">📱</span>
+              <div class="feature-name">Sync</div>
+              <div class="feature-desc">All your devices</div>
+            </td>
+          </tr>
+        </table>
+        
+        <!-- CTA -->
+        <div class="cta">
+          <a href="{{ dashboard_url|default:'#' }}" class="cta-button">Go to Dashboard →</a>
+        </div>
+        
+        <!-- Tips -->
+        <div class="tips-list">
+          <div class="tips-title">💡 Quick tips to get started</div>
+          <div class="tip-item"><span class="tip-check">✓</span> Create your first task with the + button</div>
+          <div class="tip-item"><span class="tip-check">✓</span> Use filters to organize by priority</div>
+          <div class="tip-item"><span class="tip-check">✓</span> Toggle dark mode from the top button</div>
+          <div class="tip-item"><span class="tip-check">✓</span> Add projects to group related tasks</div>
+          <div class="tip-item"><span class="tip-check">✓</span> Mark important tasks with the star icon</div>
+        </div>
+        
+        <hr/>
+        
+        <p style="font-size:13px; color:#94A3B8; text-align:center;">
+          If you have any questions, check out our <a href="#" style="color:#10B981; text-decoration:none;">Help Center</a> or reply to this email.
+        </p>
+      </div>
+      
+      <!-- Footer -->
+      <div class="footer">
+        <div class="footer-logo">
+          <span class="footer-gem">T</span>
+          <span class="footer-name">Tasko</span>
+        </div>
+        <p class="footer-text">
+          This is your official welcome email. Your account is ready to go!<br/>
+          Account: {{ email }}
+        </p>
+        <div class="footer-links">
+          <a href="#">Help Center</a>
+          <span class="footer-sep">·</span>
+          <a href="#">Privacy</a>
+          <span class="footer-sep">·</span>
+          <a href="#">Terms</a>
+          <span class="footer-sep">·</span>
+          <a href="#">Unsubscribe</a>
+        </div>
+        <p class="copyright">© 2026 Tasko Inc. · All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

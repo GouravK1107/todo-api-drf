@@ -1,0 +1,160 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tasko — Do More, Stress Less</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,350;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet" />
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'css/homepage.css' %}">
+</head>
+<body data-theme="light">
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="logo"><span class="logo-mark">T</span>Tasko</a>
+      <div class="nav-links">
+        <a href="#features" class="btn btn-ghost">Features</a>
+        <a href="#how-it-works" class="btn btn-ghost">How it works</a>
+        <a href="/templates/login.html" class="btn btn-ghost">Log in</a>
+        <a href="/templates/login.html" class="btn btn-primary">Get started free</a>
+        <!-- Theme Toggle Button -->
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <i class="fas fa-moon"></i>
+          <i class="fas fa-sun"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section>
+      <div class="hero">
+        <div class="hero-content">
+          <div class="hero-badge"><span class="badge-dot"></span>Now with AI-powered prioritization</div>
+          <h1>Do more,<br /><em>stress less</em> every day</h1>
+          <p>Tasko helps you organize your work and life with elegant simplicity. No clutter, no noise — just clarity and focus.</p>
+          <div class="hero-actions">
+            <a href="#" class="btn btn-primary btn-lg">Start for free</a>
+            <a href="#features" class="btn btn-outline btn-lg">See features</a>
+          </div>
+          <div class="hero-social-proof">
+            <div class="avatar-stack">
+              <div class="avatar">JR</div><div class="avatar">AM</div><div class="avatar">KP</div><div class="avatar">+</div>
+            </div>
+            <div><div class="stars">★★★★★</div><span>Loved by <strong>12,000+</strong> professionals</span></div>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="app-card">
+            <div class="app-card-header">
+              <div class="window-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+              <span class="app-card-title">My Tasks — Today</span>
+            </div>
+            <div class="app-card-body">
+              <p class="task-group-label">In Progress</p>
+              <div class="task-item"><div class="task-check">✓</div><span class="task-text done">Review design mockups</span><span class="task-tag tag-work">Work</span></div>
+              <div class="task-item"><div class="task-check done">✓</div><span class="task-text done">Send weekly update</span><span class="task-tag tag-work">Work</span></div>
+              <div class="task-item"><div class="task-check"></div><span class="task-text">Prepare Q4 budget doc</span><span class="task-tag tag-urgent">Urgent</span></div>
+              <div class="task-item"><div class="task-check"></div><span class="task-text">Yoga class at 6pm</span><span class="task-tag tag-personal">Personal</span></div>
+              <div class="task-item"><div class="task-check"></div><span class="task-text">Call dentist for appointment</span><span class="task-tag tag-personal">Personal</span></div>
+              <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width: 60%;"></div></div>
+              <p class="progress-label">3 of 5 tasks done · 60%</p>
+            </div>
+          </div>
+          <div class="floating-card float-1"><div class="float-icon">🎯</div><div><div class="float-text-main">Goal Achieved!</div><div class="float-text-sub">Daily streak: 14 days</div></div></div>
+          <div class="floating-card float-2"><div class="float-num">87%</div><div class="float-label">This week</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="features-inner">
+        <p class="section-eyebrow">Why Tasko</p>
+        <h2 class="section-title">Built for the way you work</h2>
+        <p class="section-sub">A focused set of powerful features — no bloat, no learning curve.</p>
+        <div class="features-grid">
+          <div class="feature-card"><div class="feature-icon icon-purple">⚡</div><h3>Smart Prioritization</h3><p>AI analyzes your tasks, deadlines, and energy levels to surface exactly what needs attention right now.</p></div>
+          <div class="feature-card"><div class="feature-icon icon-green">🔄</div><h3>Seamless Sync</h3><p>Your tasks are instantly available across every device. Phone, desktop, tablet — always in perfect sync.</p></div>
+          <div class="feature-card"><div class="feature-icon icon-indigo">📊</div><h3>Progress Insights</h3><p>Beautiful dashboards show your productivity trends, streaks, and completion rates. Stay motivated with real data.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="how-it-works" id="how-it-works">
+      <div class="how-it-works-inner">
+        <p class="section-eyebrow">Simple process</p>
+        <h2 class="section-title">How Tasko works</h2>
+        <p class="section-sub">Three steps to a calmer, more productive day.</p>
+        
+        <div class="steps-grid">
+          <div class="step-item">
+            <div class="step-number">01</div>
+            <h3>Add your tasks</h3>
+            <p>Quickly capture tasks using natural language or our simple input. No complicated fields.</p>
+            <span class="step-arrow">→</span>
+          </div>
+          <div class="step-item">
+            <div class="step-number">02</div>
+            <h3>Let AI prioritize</h3>
+            <p>Tasko automatically surfaces what matters most based on deadlines, energy, and context.</p>
+            <span class="step-arrow">→</span>
+          </div>
+          <div class="step-item">
+            <div class="step-number">03</div>
+            <h3>Focus & achieve</h3>
+            <p>Your daily plan is ready. Check things off, build streaks, and feel the progress.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="#" class="logo"><span class="logo-mark">T</span>Tasko</a>
+          <p>The minimal, focused task manager for people who value their time and attention. Trusted by 12,000+ professionals.</p>
+          <small><i>⚡</i> Built for focus · Updated daily</small>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="#">Features</a>
+          <a href="#">Pricing</a>
+          <a href="#">Changelog</a>
+          <a href="#">Roadmap</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="#">About</a>
+          <a href="#">Blog</a>
+          <a href="#">Careers</a>
+          <a href="#">Press</a>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <a href="#">Help Center</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 Tasko Inc. All rights reserved.</span>
+        <div class="footer-socials">
+          <a href="#" class="social-icon" aria-label="X (Twitter)">𝕏</a>
+          <a href="#" class="social-icon" aria-label="LinkedIn">in</a>
+          <a href="#" class="social-icon" aria-label="GitHub">gh</a>
+        </div>
+      </div>
+      <div class="back-to-top">
+        <a href="#">↑ Back to top</a>
+      </div>
+    </div>
+  </footer>
+  <script src="{% static 'js/homepage.js' %}"></script>
+</body>
+</html>
